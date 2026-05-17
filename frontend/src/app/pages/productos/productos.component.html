@@ -1,0 +1,67 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🛒 Gestión de Productos</h2>
+        <a routerLink="/productos/nuevo" class="btn btn-primary">
+            + Nuevo Producto
+        </a>
+    </div>
+
+    <div *ngIf="loading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+    </div>
+
+    <div *ngIf="!loading && !error" class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Categoría</th>
+                    <th>Fecha Creación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let prod of productos; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td><strong>{{ prod.nombre }}</strong></td>
+                    <td>${{ prod.precio | number:'1.2-2' }}</td>
+                    <td>
+                        <span [class]="prod.stock > 0 ? 'badge bg-success' : 'badge bg-danger'">
+                            {{ prod.stock }} unidades
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-info">
+                            {{ typeof prod.categoria === 'object' ? prod.categoria.nombre : prod.categoria }}
+                        </span>
+                    </td>
+                    <td>{{ prod.createdAt | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                        <a [routerLink]="['/productos/editar', prod._id]" 
+                           class="btn btn-warning btn-sm me-2">
+                            ✏️ Editar
+                        </a>
+                        <button class="btn btn-danger btn-sm" 
+                                (click)="eliminarProducto(prod._id!, prod.nombre)">
+                            🗑️ Eliminar
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="productos.length === 0">
+                    <td colspan="7" class="text-center">
+                        No hay productos registrados
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📁 Gestión de Categorías</h2>
+        <a routerLink="/categorias/nuevo" class="btn btn-primary">
+            + Nueva Categoría
+        </a>
+    </div>
+
+    <!-- Mensaje de carga -->
+    <div *ngIf="loading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+    </div>
+
+    <!-- Tabla de categorías -->
+    <div *ngIf="!loading && !error" class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Fecha Creación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cat of categorias; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td><strong>{{ cat.nombre }}</strong></td>
+                    <td>{{ cat.descripcion || 'Sin descripción' }}</td>
+                    <td>
+                        <span [class]="cat.estado ? 'badge bg-success' : 'badge bg-danger'">
+                            {{ cat.estado ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td>{{ cat.createdAt | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                        <a [routerLink]="['/categorias/editar', cat._id]" 
+                           class="btn btn-warning btn-sm me-2">
+                            ✏️ Editar
+                        </a>
+                        <button class="btn btn-danger btn-sm" 
+                                (click)="eliminarCategoria(cat._id!, cat.nombre)">
+                            🗑️ Eliminar
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="categorias.length === 0">
+                    <td colspan="6" class="text-center">
+                        No hay categorías registradas
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
